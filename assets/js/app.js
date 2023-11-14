@@ -14,37 +14,64 @@ let bogsarray = [
         content: "JavaScript, often abbreviated as JS, is a programming language that is one of the core technologies of the World Wide Web, alongside HTML and CSS."
     }
 ]
-const onclick = eve => {
+// const onclick = eve => {
+//     eve.preventDefault();
+//     let obj = {
+//         title: titlecontrol.value,
+//         content: contentcontrol.value.trim()
+//     }
+//     createblog(obj)
+//         .then((res) => {
+//             bogsarray.push(res)
+//             return readblog()
+
+//         })
+//         .then((res) => {
+//             cl(res)
+//             blogtemplating(res)
+//             Swal.fire(
+//                 'Good job!',
+//                 'You have created a blog',
+//                 'successfully'
+//             )
+
+
+//         })
+//         .catch((err) => {
+//             cl(err)
+//         })
+//         .finally(()=>{
+//             formcontrol.reset ()
+//         })
+
+// }
+const onclick = async (eve) => {
     eve.preventDefault();
-    let obj = {
-        title: titlecontrol.value,
-        content: contentcontrol.value.trim()
+    try {
+        let obj = {
+            title: titlecontrol.value,
+            content: contentcontrol.value.trim()
+        };
+
+        let res = await createblog(obj);
+        bogsarray.push(res);
+
+        let readRes = await readblog();
+        cl(readRes); 
+        blogtemplating(readRes);
+
+        Swal.fire(
+            'Good job!',
+            'You have created a blog successfully',
+            'success'
+        );
+    } catch (err) {
+        console.log(err); // Assuming 'cl' is a logging function
+    } finally {
+        formcontrol.reset();
     }
-    createblog(obj)
-        .then((res) => {
-            bogsarray.push(res)
-            return readblog(res)
+};
 
-        })
-        .then((res) => {
-            cl(res)
-            blogtemplating(bogsarray)
-            Swal.fire(
-                'Good job!',
-                'You have created a blog',
-                'successfully'
-              )
-
-
-        })
-        .catch((err) => {
-            cl(err)
-        })
-        .finally((eve)=>{
-            eve.reset()
-        })
-
-}
 const createblog = eve => {
     let promise = new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -57,7 +84,7 @@ const createblog = eve => {
             }
         }, 500)
 
-       
+
     }
     )
     return promise;
@@ -70,13 +97,13 @@ const readblog = (ele) => {
         setTimeout(() => {
             let err = false;
             if (!err) {
-                resolve(ele);
+                resolve(bogsarray);
 
             } else {
                 reject('something went wrong')
             }
         }, 500)
-        
+
 
     })
     return promise;
